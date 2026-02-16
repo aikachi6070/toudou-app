@@ -3,7 +3,7 @@
 const input = document.getElementById('todoInput');
 const button = document.getElementById('addBtn');
 const liste = document.getElementById('todoList');
-
+const port = process.env.PORT || 4000
 
 function deleteTodo(id){
     fetch('http://192.168.1.16:8000/todos/'+id, {

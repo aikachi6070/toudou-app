@@ -1,0 +1,81 @@
+
+
+const input = document.getElementById('todoInput');
+const button = document.getElementById('addBtn');
+const liste = document.getElementById('todoList');
+
+
+function deleteTodo(id){
+    fetch('http://192.168.1.16:8000/todos/'+id, {
+        method:'DELETE'
+    })
+    .then(() => {
+        location.reload();
+    });
+}
+
+function doneTodo(id,currentDone){
+    const newDone = !currentDone;
+
+    fetch('http://192.168.1.16:8000/todos/'+id + '?done='+newDone, {
+        method:'PUT'
+    })
+    .then(() => {
+        location.reload();
+    })
+}
+function modifTodo(id){
+    const textSpan=document.getElementById('text-'+id);
+    const text = textSpan.innerText;
+    
+    textSpan.classList.add('hidden');
+
+    liste.innerHTML+="<input type=text id=todoModif placeholder="+text+">";
+    liste.innerHTML+="<button onclick='validerModif("+id+")'>Modifier</button>";
+
+    const addBtn2_2=document.getElementById('addBtn2');
+    const newtext=document.getElementById('todoModif');
+};
+
+function validerModif(id) {
+    const newtext = document.getElementById('todoModif');
+    const newtextfinal = newtext.value;
+    console.log("Valeur:", newtextfinal);
+    
+    fetch('http://192.168.1.16:8000/todos/' + id + '?text=' + newtextfinal, {
+        method: 'PUT'
+    })
+    .then(() => location.reload());
+}
+
+//pour afficher la liste dans le HTML
+fetch('http://192.168.1.16:8000/todos')
+.then(response=>response.json())
+.then(data=> {
+    data.forEach(todo => {
+        if(todo.done==1){
+            emoji="✅";
+        }
+        else {
+            emoji="☑️";
+        }
+        liste.innerHTML += '<li>'+emoji+'<span id="text-'+todo.id+'">'+ todo.text +'</span><button onclick="deleteTodo(' + todo.id + ')">🗑️</button><button onclick="doneTodo(' + todo.id + "," +todo.done+ ')">✔️</button><button onclick="modifTodo(' + todo.id + ')">✏️</button></li>';
+    });
+});
+
+
+
+//pour creer dans la database
+button.addEventListener('click', function(){
+    const texte = input.value;
+    fetch('http://192.168.1.16:8000/todos?text='+texte,{
+        method: 'POST'
+    }
+    )
+    .then(response => response.json())
+    .then(data => {
+        liste.innerHTML += '<li>'+texte+'</li>';
+        location.reload();
+    });
+}
+);

@@ -61,7 +61,7 @@ def create_todo(text: str):
 @app.put("/todos/{todo_id}")
 def update_todo(todo_id: int, done: bool = None, text: str = None):
     db = next(get_db())
-    todo = db.query(Todo).filter(Todo.id == todo.id).first()
+    todo = db.query(Todo).filter(Todo.id == todo_id).first()
     if done is not None:
         todo.done=done
     if text is not None:
@@ -73,7 +73,7 @@ def update_todo(todo_id: int, done: bool = None, text: str = None):
 @app.delete("/todos/{todo_id}")
 def delete_todo(todo_id: int):
     db=next(get_db())
-    todo=db.query(Todo).filter(Todo.id == todo.id).first()
+    todo=db.query(Todo).filter(Todo.id == todo_id).first()
     db.delete(todo)
     db.commit()
     return {"deleted": todo_id}

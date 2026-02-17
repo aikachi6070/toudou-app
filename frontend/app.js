@@ -3,10 +3,10 @@
 const input = document.getElementById('todoInput');
 const button = document.getElementById('addBtn');
 const liste = document.getElementById('todoList');
-const port = process.env.PORT || 4000
+const API_URL = 'https://toudou-backend-c2x1.onrender.com';
 
 function deleteTodo(id){
-    fetch('http://192.168.1.16:8000/todos/'+id, {
+    fetch(API_URL+'/todos/'+id, {
         method:'DELETE'
     })
     .then(() => {
@@ -17,7 +17,7 @@ function deleteTodo(id){
 function doneTodo(id,currentDone){
     const newDone = !currentDone;
 
-    fetch('http://192.168.1.16:8000/todos/'+id + '?done='+newDone, {
+    fetch(API_URL+'/todos/'+id + '?done='+newDone, {
         method:'PUT'
     })
     .then(() => {
@@ -42,14 +42,14 @@ function validerModif(id) {
     const newtextfinal = newtext.value;
     console.log("Valeur:", newtextfinal);
     
-    fetch('http://192.168.1.16:8000/todos/' + id + '?text=' + newtextfinal, {
+    fetch(API_URL+'/todos/' + id + '?text=' + newtextfinal, {
         method: 'PUT'
     })
     .then(() => location.reload());
 }
 
 //pour afficher la liste dans le HTML
-fetch('http://192.168.1.16:8000/todos')
+fetch(API_URL+'/todos')
 .then(response=>response.json())
 .then(data=> {
     data.forEach(todo => {
@@ -68,7 +68,7 @@ fetch('http://192.168.1.16:8000/todos')
 //pour creer dans la database
 button.addEventListener('click', function(){
     const texte = input.value;
-    fetch('http://192.168.1.16:8000/todos?text='+texte,{
+    fetch(API_URL+'/todos?text='+texte,{
         method: 'POST'
     }
     )
